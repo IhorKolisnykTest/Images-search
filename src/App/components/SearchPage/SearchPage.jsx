@@ -1,16 +1,15 @@
-import { Box, Container, Grid, Pagination, Stack } from "@mui/material";
-import { logDOM } from "@testing-library/react";
-import React, { useEffect, useState } from "react";
+import { Container } from "@mui/material";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useAppState } from "../../hooks/useAppState";
 import { useFetchImages } from "../../hooks/useFetchImages";
-import { useModal } from "../../hooks/useModal";
 import {
   addFavoriteImageAction,
   removeFavoriteImageAction,
 } from "../../state/actions/setFavoriteImagesActions";
 import { setPageAction } from "../../state/actions/setSearchParamsActions";
-import { ImageCard } from "../ImageCard/ImageCard";
+import { ImageList } from "../ImageList/ImageList";
+import { ImagePagination } from "../Pagination/Pagination";
 
 export const SearchPageTitle = styled.h1`
   padding: 20px;
@@ -25,20 +24,11 @@ export const NoImages = styled.h2`
 `;
 
 export const SearchPage = () => {
-  const [page, setPage] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(null);
   const { state, dispatch } = useAppState();
   const fetchImages = useFetchImages();
-  const { show, hide, RenderModal } = useModal();
 
-  const handleSelect = (e, image) => {
-    setSelectedImage(image);
-    show();
-  };
-
-  const handleChange = (event, value) => {
-    setPage(value);
-    dispatch(setPageAction(value));
+  const handleChangePage = (page) => {
+    dispatch(setPageAction(page));
   };
 
   useEffect(() => {
@@ -60,40 +50,14 @@ export const SearchPage = () => {
         <NoImages>{state?.error ? "Error occurs" : "No images"}</NoImages>
       ) : (
         <>
-          <Box sx={{ flexGrow: 1 }}>
-            <Grid
-              container
-              spacing={{ xs: 2, md: 3 }}
-              columns={{ xs: 4, sm: 8, md: 12 }}
-            >
-              {state?.images?.hits?.map((i) => (
-                <Grid item xs={2} sm={4} md={4} key={i.id}>
-                  <ImageCard
-                    image={i}
-                    handleFavorite={handleAddToFavorites}
-                    onClick={handleSelect}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-          <Stack spacing={2}>
-            <Pagination
-              sx={{ my: "15px", mx: "auto" }}
-              count={Math.ceil(state.images.totalHits / 9)} // 9 is default number of results per page
-              page={page}
-              onChange={(event, value) => handleChange(event, value)}
-            />
-          </Stack>
-          {selectedImage && (
-            <RenderModal onClose={hide}>
-              <ImageCard
-                modalMode
-                image={selectedImage}
-                handleFavorite={handleAddToFavorites}
-              />
-            </RenderModal>
-          )}
+          <ImageList
+            images={state?.images?.hits}
+            handleAddToFavorites={handleAddToFavorites}
+          ></ImageList>
+          <ImagePagination
+            handleChangePage={handleChangePage}
+            count={Math.ceil(state.images.totalHits / 9)} // 9 is default number of images per page
+          />
         </>
       )}
     </Container>
