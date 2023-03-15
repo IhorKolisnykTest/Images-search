@@ -1,14 +1,14 @@
-import SearchIcon from "@mui/icons-material/Search";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import ArrowBack from "@mui/icons-material/ArrowBack";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import SearchIcon from "@mui/icons-material/Search";
 import { Button, Grid, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import { useAppState } from "../../hooks/useAppState";
 import { useFetchImages } from "../../hooks/useFetchImages";
-import { setSearchQueryAction } from "../../state/actions/setSearchParamsActions";
 import { setIsFetchedAction } from "../../state/actions/setIsFetchedActions";
+import { setSearchQueryAction } from "../../state/actions/setSearchParamsActions";
 
 const Form = styled.form`
   display: flex;
@@ -20,12 +20,6 @@ export const SearchHeader = () => {
   const fetchImages = useFetchImages();
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    if (location.pathname === "/favorites") {
-      navigate("/");
-    }
-  }, [!state.images]);
 
   const handleSearch = () => {
     navigate("/");

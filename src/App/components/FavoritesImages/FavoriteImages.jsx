@@ -22,6 +22,10 @@ export const FavoriteImages = () => {
   const [page, setPage] = useState(1);
   const { show, hide, RenderModal } = useModal();
 
+  useEffect(() => {
+    dispatch(setIsFetchedAction(true));
+  }, []);
+
   const handleSelect = (e, image) => {
     setSelectedImage(image);
     show();
