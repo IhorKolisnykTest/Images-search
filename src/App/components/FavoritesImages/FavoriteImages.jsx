@@ -27,10 +27,6 @@ export const FavoriteImages = () => {
     show();
   };
 
-  // useEffect(() => {
-  //   dispatch(setIsFetchedAction(true));
-  // }, []);
-
   const handleChange = (event, value) => {
     setPage(value);
   };
