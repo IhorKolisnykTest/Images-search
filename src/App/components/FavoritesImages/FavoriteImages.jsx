@@ -25,12 +25,11 @@ export const FavoriteImages = () => {
   const handleSelect = (e, image) => {
     setSelectedImage(image);
     show();
-    console.log(e, image);
   };
 
-  useEffect(() => {
-    dispatch(setIsFetchedAction(true));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setIsFetchedAction(true));
+  // }, []);
 
   const handleChange = (event, value) => {
     setPage(value);

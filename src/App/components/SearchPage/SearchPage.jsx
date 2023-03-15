@@ -34,7 +34,6 @@ export const SearchPage = () => {
   const handleSelect = (e, image) => {
     setSelectedImage(image);
     show();
-    console.log(e, image);
   };
 
   const handleChange = (event, value) => {

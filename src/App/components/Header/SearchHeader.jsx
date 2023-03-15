@@ -2,7 +2,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import { Button, Grid, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppState } from "../../hooks/useAppState";
@@ -20,6 +20,12 @@ export const SearchHeader = () => {
   const fetchImages = useFetchImages();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/favorites") {
+      navigate("/");
+    }
+  }, [!state.images]);
 
   const handleSearch = () => {
     navigate("/");
@@ -45,8 +51,9 @@ export const SearchHeader = () => {
   const handleNavigateToFavorites = () => {
     const isFavoritePage = location.pathname === "/favorites";
     navigate(isFavoritePage ? "/" : "/favorites");
+    dispatch(setIsFetchedAction(true));
   };
-  console.log(location.pathname);
+
   return (
     <Grid
       container
