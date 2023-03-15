@@ -9,6 +9,7 @@ import { setIsFetchedAction } from "../../state/actions/setIsFetchedActions";
 import { ImageCard } from "../ImageCard/ImageCard";
 import { NoImages } from "../SearchPage/SearchPage";
 import styled from "styled-components";
+import { useModal } from "../../hooks/useModal";
 
 export const FavoriteImagesTitle = styled.h1`
   padding: 20px;
@@ -17,7 +18,15 @@ export const FavoriteImagesTitle = styled.h1`
 
 export const FavoriteImages = () => {
   const { state, dispatch } = useAppState();
+  const [selectedImage, setSelectedImage] = useState(null);
   const [page, setPage] = useState(1);
+  const { show, hide, RenderModal } = useModal();
+
+  const handleSelect = (e, image) => {
+    setSelectedImage(image);
+    show();
+    console.log(e, image);
+  };
 
   useEffect(() => {
     dispatch(setIsFetchedAction(true));
@@ -52,7 +61,11 @@ export const FavoriteImages = () => {
             >
               {pageResults?.map((i) => (
                 <Grid item xs={2} sm={4} md={4} key={i.id}>
-                  <ImageCard image={i} handleFavorite={handleAddToFavorites} />
+                  <ImageCard
+                    image={i}
+                    handleFavorite={handleAddToFavorites}
+                    onClick={handleSelect}
+                  />
                 </Grid>
               ))}
             </Grid>
@@ -66,6 +79,16 @@ export const FavoriteImages = () => {
               onChange={(event, value) => handleChange(event, value)}
             />
           </Stack>
+
+          {selectedImage && (
+            <RenderModal onClose={hide}>
+              <ImageCard
+                modalMode
+                image={selectedImage}
+                handleFavorite={handleAddToFavorites}
+              />
+            </RenderModal>
+          )}
         </>
       )}
     </Container>

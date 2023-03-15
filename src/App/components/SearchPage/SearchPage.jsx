@@ -1,14 +1,16 @@
 import { Box, Container, Grid, Pagination, Stack } from "@mui/material";
+import { logDOM } from "@testing-library/react";
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { useAppState } from "../../hooks/useAppState";
 import { useFetchImages } from "../../hooks/useFetchImages";
+import { useModal } from "../../hooks/useModal";
 import {
   addFavoriteImageAction,
   removeFavoriteImageAction,
 } from "../../state/actions/setFavoriteImagesActions";
 import { setPageAction } from "../../state/actions/setSearchParamsActions";
 import { ImageCard } from "../ImageCard/ImageCard";
-import styled from "styled-components";
 
 export const SearchPageTitle = styled.h1`
   padding: 20px;
@@ -24,8 +26,16 @@ export const NoImages = styled.h2`
 
 export const SearchPage = () => {
   const [page, setPage] = useState(1);
+  const [selectedImage, setSelectedImage] = useState(null);
   const { state, dispatch } = useAppState();
   const fetchImages = useFetchImages();
+  const { show, hide, RenderModal } = useModal();
+
+  const handleSelect = (e, image) => {
+    setSelectedImage(image);
+    show();
+    console.log(e, image);
+  };
 
   const handleChange = (event, value) => {
     setPage(value);
@@ -59,7 +69,11 @@ export const SearchPage = () => {
             >
               {state?.images?.hits?.map((i) => (
                 <Grid item xs={2} sm={4} md={4} key={i.id}>
-                  <ImageCard image={i} handleFavorite={handleAddToFavorites} />
+                  <ImageCard
+                    image={i}
+                    handleFavorite={handleAddToFavorites}
+                    onClick={handleSelect}
+                  />
                 </Grid>
               ))}
             </Grid>
@@ -72,6 +86,15 @@ export const SearchPage = () => {
               onChange={(event, value) => handleChange(event, value)}
             />
           </Stack>
+          {selectedImage && (
+            <RenderModal onClose={hide}>
+              <ImageCard
+                modalMode
+                image={selectedImage}
+                handleFavorite={handleAddToFavorites}
+              />
+            </RenderModal>
+          )}
         </>
       )}
     </Container>
